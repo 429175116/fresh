@@ -1,0 +1,466 @@
+<style lang="less">
+@import "../wxParse/wxParse.wxss";
+#getUserInfo{
+  position: fixed;
+  top: 0;
+  width: 750rpx !important;
+  height: 100% !important;
+  padding: 0rpx !important;
+  z-index: 999;
+  background-color:rgba(255, 255, 255, 0);
+  color: #fff;
+}
+.swiper {
+  height: 600rpx;
+  width: 100%;
+}
+.swiper-image,swiper-item {
+  height: 100%;
+  width: 100%;
+}
+.slide-image{
+  height: 100%;
+  width: 100%;
+}
+.nav{
+  width: 750rpx;
+  height: 200rpx;
+  margin-top: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navCon{
+  width: 30%;
+  color: #333;
+  font-size: 30rpx;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+.navCon image{
+  width: 100rpx;
+  height: 100rpx;
+}
+.artileList{
+  width: 750rpx;
+  height: auto;
+  margin-bottom: 120rpx;
+}
+.artile{
+  color: #333;
+  width: 750rpx;
+  height: 300rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.artileImg{
+  width: 350rpx;
+  height: 260rpx;
+}
+.artileCon{
+  margin-left: 40rpx;
+  width: 310rpx;
+  height: 260rpx;
+  font-size: 30rpx;
+}
+
+.artile image{
+  width: 350rpx;
+  height: 260rpx;
+}
+.artileCon view:nth-child(1){
+  width: 100%;
+  height: 60rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.artileCon view:nth-child(2){
+  width: 100%;
+  height: 200rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.artileConTitle{
+  font-weight: 700;
+  font-size: 35rpx;
+}
+.activity{
+  width: 750rpx;
+  height: auto;
+  margin-bottom: 0rpx important;
+}
+.updataNewsList{
+  width: 350rpx;
+  height: 65rpx;
+  line-height: 65rpx;
+  border-radius: 20rpx;
+  border: 1rpx solid #ccc;
+  color: #ccc;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 20rpx;
+}
+</style>
+<template>
+  <view>
+    <import src="../wxParse/wxParse.wxml"/>
+    <swiper class="swiper" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+      <block wx:for="{{imgUrls}}" item="item">
+        <swiper-item>
+          <image src="{{imgRequestUrl + item.img}}" class="slide-image"/>
+        </swiper-item>
+      </block>
+    </swiper>
+    <!-- <view class="nav">
+      <view class="navCon">
+        <image src="http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg" />
+        <view>最新活动</view>
+      </view>
+      <view class="navCon">
+        <image src="http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg" />
+        <view>商城海报</view>
+      </view>
+      <view class="navCon">
+        <image src="http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg" />
+        <view>新品生鲜</view>
+      </view>
+    </view> -->
+    <!-- 最新活动 -->
+    <!-- <view></view> -->
+    <view class="activity">
+      <block wx:for="{{NewsListData}}" key="index" index="index" item="item">
+        <view class="artile" data-id="{{item.id}}" @tap="goNews">
+          <view class="artileImg">
+            <image src="{{imgRequestUrl + item.imgs[0].img}}" />
+          </view>
+          <view class="artileCon">
+            <view class="artileConTitle">{{item.title}}</view>
+            <!-- <view>{{item.content}}</view> -->
+            <view>
+              <!-- {{item.content}} -->
+              <template is="wxParse" data="{{wxParseData:newsList[index].nodes}}" />
+            </view>
+          </view>
+        </view>
+      </block>
+      <view class="updataNewsList" wx:if="{{nextNewsListData != ''}}" @tap="updataNewsList">查看更多</view>
+    </view>
+    <!-- 商城海报，外链 -->
+    <image class="mallImg" @tap="goMall" src="{{mallImgUrl}}" style="width:{{mallImgAutoW}}px;height:{{mallImgAutoH}}px" bindload='autoImage' />
+    <!-- 新品生鲜 -->
+    <view class="artileList">
+      <block wx:for="{{ArtileListData}}" key="index" index="index" item="item">
+        <view class="artile" data-id="{{item.id}}" @tap="goArtile">
+          <view class="artileImg">
+            <image src="{{imgRequestUrl + item.imgs[0].img}}" />
+          </view>
+          <view class="artileCon">
+            <view class="artileConTitle">{{item.title}}</view>
+            <!-- <view>{{item.content}}</view> -->
+            <view>
+              <!-- {{item.content}} -->
+              <template is="wxParse" data="{{wxParseData:article[index].nodes}}" />
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+    <!-- 授权按钮部分 -->
+    <view>
+      <button open-type="getUserInfo" wx:if="{{authorizationButton}}" id='getUserInfo' lang="zh_CN" @getuserinfo="onGotUserInfo">{{time}}</button>
+    </view>
+    <nav :uuid.sync="uuid" @childFn.user="goPage" />
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import nav from '../components/nav' // 底部导航
+  import WxParse from '../wxParse/wxParse'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '首页'
+    }
+    components = {
+      // 底部导航
+      nav: nav
+    };
+    data = {
+      userInfo: null,
+      openId: '',
+      imgUrls: [],
+      imgRequestUrl: '',
+      mallImgUrl: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+      mallImgAutoW: 0,
+      mallImgAutoH: 0,
+      indicatorDots: true,
+      autoplay: true,
+      interval: 2000,
+      duration: 2000,
+      autoW: [],
+      autoH: [],
+      authorizationButton: true,
+      NewsListData: null,
+      nextNewsListData: '',
+      ArtileListData: null,
+      nextArtileListData: ''
+    }
+    methods = {
+      // 底部导航跳转
+      goPage (url, evt) {
+        if (url === "/pages/mall") {
+          this.$navigate(url)
+          return
+        }
+        // 销毁当前页{跳转}
+        this.$redirect(url)
+      }
+    }
+    // 进入商城
+    goMall() {
+      this.$navigate("/pages/mall")
+    }
+    // 显示资讯详情(活动资讯)
+    goNews(e) {
+      let id = e.currentTarget.dataset.id
+      this.$navigate(`/pages/newsDetail?id=${id}`)
+    }
+    // 显示文章详情(新品生鲜)
+    goArtile(e) {
+      let id = e.currentTarget.dataset.id
+      this.$navigate(`/pages/artileDetail?id=${id}`)
+    }
+    onLoad() {
+      this.imgRequestUrl = this.$parent.globalData.imgRequestUrl
+      // 获取轮播图资源
+      this.getSwiperData()
+      // 获取资讯列表数据
+      this.getNewsList()
+      // 获取文章列表数据
+      this.getArtileList()
+      // 用户信息
+      this.onGotUserInfo()
+    }
+    // 获取轮播图片
+    getSwiperData() {
+      wx.request({
+        url: `${this.$parent.globalData.requestUrl}/api/rollingImgsList`,
+        method: 'GET',
+        success: data => {
+          if (data.data.success) {
+            this.imgUrls = data.data.data.rolling_imgs
+            this.$apply()
+          } else {
+            wx.showModal({
+              title: '',
+              content: data.data.data.errmsg
+            })
+          }
+        }
+      })
+    }
+    // 获取资讯列表数据
+    getNewsList() {
+      wx.request({
+        url: `${this.$parent.globalData.requestUrl}/api/newsList`,
+        method: 'GET',
+        success: data => {
+          if (data.data.success) {
+            data = data.data.news_list
+            this.NewsListData = data.data
+            for (var i in this.NewsListData) {
+              WxParse.wxParse(`newsList[${i}]`, 'html', this.NewsListData[i].content, this, 5)
+            }
+            // 获取下一页的请求Id
+            if (data.meta.pagination.links.length !== 0) {
+              this.nextNewsListData = data.meta.pagination.links.next
+            }
+            this.$apply()
+          } else {
+            wx.showModal({
+              title: '',
+              content: data.data.data.errmsg
+            })
+          }
+        }
+      })
+    }
+    // 资讯列表更新
+    updataNewsList() {
+      if (!this.nextNewsListData) {
+        return
+      }
+      wx.request({
+        url: this.nextNewsListData,
+        method: 'GET',
+        success: data => {
+          if (data.data.success) {
+            data = data.data.news_list
+            this.NewsListData = data.data
+            for (var i in this.NewsListData) {
+              WxParse.wxParse(`newsList[${i}]`, 'html', this.NewsListData[i].content, this, 5)
+            }
+            this.nextNewsListData = ''
+            // 获取下一页的请求Id
+            if (data.meta.pagination.links.length !== 0) {
+              this.nextNewsListData = data.meta.pagination.links.next
+            }
+            this.$apply()
+          } else {
+            wx.showModal({
+              title: '',
+              content: data.data.errmsg
+            })
+          }
+        }
+      })
+    }
+    // 获取文章列表数据
+    getArtileList() {
+      wx.request({
+        url: `${this.$parent.globalData.requestUrl}/api/artileList`,
+        method: 'GET',
+        success: data => {
+          if (data.data.success) {
+            data = data.data.articles
+            this.ArtileListData = data.data
+            for (var i in this.ArtileListData) {
+              WxParse.wxParse(`article[${i}]`, 'html', this.ArtileListData[i].content, this, 5)
+            }
+            // 获取下一页路劲
+            if (data.meta.pagination.links.length !== 0) {
+              this.nextArtileListData = data.meta.pagination.links.next
+            }
+            this.$apply()
+          } else {
+            wx.showModal({
+              title: '',
+              content: data.data.data.errmsg
+            })
+          }
+        }
+      })
+    }
+    // 页面上拉触底事件的处理函数(文章列表)
+    async onReachBottom() {
+      if (!this.nextArtileListData) {
+        return
+      }
+      wx.request({
+        url: this.nextArtileListData,
+        method: 'GET',
+        success: data => {
+          if (data.data.success) {
+            data = data.data.articles
+            this.ArtileListData = data.data
+            for (var i in this.ArtileListData) {
+              WxParse.wxParse(`article[${i}]`, 'html', this.ArtileListData[i].content, this, 5)
+            }
+            this.nextArtileListData = ''
+            // 获取下一页路劲
+            if (data.meta.pagination.links.length !== 0) {
+              this.nextArtileListData = data.meta.pagination.links.next
+            }
+            this.$apply()
+          } else {
+            wx.showModal({
+              title: '',
+              content: data.data.errmsg
+            })
+          }
+        }
+      })
+    }
+    async onGotUserInfo() {
+      // 查看是否授权
+      wx.getSetting({
+        success: res => {
+          if (res.authSetting['scope.userInfo']) {
+            // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+            wx.getUserInfo({
+              success: res => {
+                this.userInfo = res.userInfo
+                if (this.userInfo) {
+                  this.authorizationButton = false
+                  this.avatarUrl = this.userInfo.avatarUrl
+                  this.nickName = this.userInfo.nickName
+                  // 数据生效
+                  this.$apply()
+                  // 提交用户信息
+                  this.setUserInfo(this.userInfo)
+                  // 登陆
+                  // this.userLogin(this.userInfo)
+                  this.$parent.globalData.userInfo = this.userInfo
+                  this.$apply()
+                }
+              }
+            })
+          }
+        }
+      })
+    }
+    // 提交用户信息
+    async setUserInfo(userInfo) {
+      if (this.$parent.globalData.openId) {
+        return
+      }
+      // get code
+      wepy.login({
+        success: res => {
+          if (res.code) {
+            this.code = res.code
+            // up data userInfo
+            wx.request({
+              url: `${this.$parent.globalData.requestUrl}/api/createOrUpdateUser`,
+              method: 'POST',
+              data: {
+                code: res.code,
+                nick_name: this.userInfo.nickName,
+                profile: this.userInfo.avatarUrl
+              },
+              success: data => {
+                if (data.data.success) {
+                  // 获取用户信息,及openID  并存入全局
+                  this.userInfo = data.data.user
+                  this.openId = this.userInfo.open_id
+                  this.$parent.globalData.userInfo = this.userInfo
+                  this.$parent.globalData.openId = this.openId
+                  this.$apply()
+                } else {
+                  wx.showModal({
+                    title: '',
+                    content: data.data.errmsg
+                  })
+                }
+              }
+            })
+          } else {
+            console.log('登录失败！' + res.errMsg)
+          }
+        }
+      })
+    }
+    autoImage(e) {
+      // 获取图片的狂傲
+      var imgW = e.detail.width
+      var imgH = e.detail.height
+      // 计算图片比例
+      var imgScale = imgW / imgH
+      // 声明自适应宽高变量
+      var autoW = ''
+      var autoH = ''
+      // 获取屏幕宽度，并将图片设置为屏幕等宽
+      wx.getSystemInfo({
+        success: res => {
+          autoW = res.windowWidth
+          autoH = autoW / imgScale
+          this.mallImgAutoW = autoW
+          this.mallImgAutoH = autoH
+          this.$apply()
+        }
+      })
+    }
+  }
+</script>

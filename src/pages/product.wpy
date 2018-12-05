@@ -1,0 +1,127 @@
+<style lang="less">
+.swiper {
+  height: 600rpx;
+  width: 100%;
+}
+.swiper-image,swiper-item {
+  height: 100%;
+  width: 100%;
+}
+.slide-image{
+  height: 100%;
+  width: 100%;
+}
+.nav{
+  width: 750rpx;
+  height: 200rpx;
+  margin-top: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navCon{
+  width: 30%;
+  color: #333;
+  font-size: 30rpx;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+.navCon image{
+  width: 100rpx;
+  height: 100rpx;
+}
+.imgList{
+  width: 750rpx;
+  height: auto;
+  margin-bottom: 120rpx;
+}
+</style>
+<template>
+  <view>
+    <view class="imgList">
+      <block wx:for="{{imgUrls}}" key="index" index="index" item="item">
+        <image src="{{imgRequestUrl + item.img}}" data-index="{{index}}" style="width:{{autoW[index]}}px;height:{{autoH[index]}}px" bindload='autoImage' />
+      </block>
+    </view>
+    
+    <nav :uuid.sync="uuid" @childFn.user="goPage" />
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import nav from '../components/nav' // 底部导航
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '产品'
+    }
+    components = {
+      // 底部导航
+      nav: nav
+    };
+    data = {
+      imgUrls: [],
+      imgRequestUrl: '',
+      indicatorDots: true,
+      autoplay: true,
+      interval: 2000,
+      duration: 2000,
+      autoW: [],
+      autoH: []
+    }
+    methods = {
+      // 底部导航跳转
+      goPage (url, evt) {
+        if (url === "/pages/mall") {
+          this.$navigate(url)
+          return
+        }
+        // 销毁当前页{跳转}
+        this.$redirect(url)
+      }
+    }
+    onLoad() {
+      this.imgRequestUrl = this.$parent.globalData.imgRequestUrl
+      this.getSwiperData()
+    }
+    // 获取轮播图片
+    getSwiperData() {
+      wx.request({
+        url: `${this.$parent.globalData.requestUrl}/api/imgList`,
+        method: 'GET',
+        success: data => {
+          if (data.data.success) {
+            this.imgUrls = data.data.imgs
+            this.$apply()
+          } else {
+            wx.showModal({
+              title: '',
+              content: data.data.data.errmsg
+            })
+          }
+        }
+      })
+    }
+    autoImage(e) {
+      let index = e.target.dataset.index
+      // 获取图片的狂傲
+      var imgW = e.detail.width
+      var imgH = e.detail.height
+      // 计算图片比例
+      var imgScale = imgW / imgH
+      // 声明自适应宽高变量
+      var autoW = ''
+      var autoH = ''
+      // 获取屏幕宽度，并将图片设置为屏幕等宽
+      wx.getSystemInfo({
+        success: res => {
+          autoW = res.windowWidth
+          autoH = autoW / imgScale
+          this.autoW[index] = autoW
+          this.autoH[index] = autoH
+          this.$apply()
+        }
+      })
+    }
+  }
+</script>

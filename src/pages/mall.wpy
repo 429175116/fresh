@@ -1,0 +1,33 @@
+<style lang="less">
+</style>
+<template>
+  <view>
+    <web-view src="https://jd.com"></web-view>
+    <nav :uuid.sync="uuid" @childFn.user="goPage" />
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import nav from '../components/nav' // 底部导航
+  export default class Mall extends wepy.page {
+    config = {
+      navigationBarTitleText: '商城'
+    }
+    components = {
+      // 底部导航
+      nav: nav
+    };
+    data = {
+
+    }
+    methods = {
+      // 底部导航跳转
+      goPage (url, evt) {
+        // 销毁当前页{跳转}
+        this.$redirect(url)
+      }
+    }
+    onLoad() {
+    }
+  }
+</script>

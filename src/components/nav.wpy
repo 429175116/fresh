@@ -1,0 +1,134 @@
+<style lang="less">
+.footer {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  background: #fff;
+  border-top: 1rpx solid #f3f1f1;
+  z-index: 5;
+}
+
+.footer .ft_item {
+  width: 33.33%;
+  height: 100%;
+  text-align: center;
+  float: left;
+}
+
+.text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.footer .ft_item image {
+  height: 50rpx;
+  width: 50rpx;
+  margin: 10rpx auto 0rpx auto;
+  display: block;
+}
+
+.title {
+  margin-top: -80rpx;
+  font-weight: bold;
+}
+
+.mod_btn {
+  margin: auto;
+  border-radius: 50%;
+  border: 6rpx solid #fff;
+  background: rgba(0, 0, 0, 0);
+  width: 130rpx;
+  height: 130rpx;
+  color: #fff;
+  font-size: 30rpx;
+  line-height: 120rpx;
+  font-weight: bold;
+}
+.show {
+  display: block;
+}
+.hidden {
+  display: none;
+}
+.action{
+  color: #f86e09;
+}
+</style>
+<template>
+<!-- 原 bindtap="click" 替换为 @tap="click"，原catchtap="click"替换为@tap.stop="click"。
+原 capture-bind:tap="click" 替换为 @tap.capture="click"，原capture-catch:tap="click"替换为@tap.capture.stop="click"。 -->
+<!-- 动态传值是指父组件向子组件动态传递数据。
+父子组件数据完全独立互不相干，但可以通过使用.sync修饰符来达到父组件数据动态绑定到子组件的效果，
+也可以通过设置子组件props的twoWay：true来达到子组件数据绑定到父组件的效果。
+那如果即使用.sync修饰符，同时子组件props的twoWay: true，就可以达到数据的双向绑定。 -->
+  <view>
+  <view class="footer">
+    <view class="ft_item on">
+      <view @tap="goIndex">
+        <image src="/img/{{navImg[0]}}.png" />
+        <text class="text {{navAction[0]}}">首页</text>
+      </view>
+    </view>
+    <view class="ft_item">
+      <view @tap="goMall">
+        <image src="/img/{{navImg[1]}}.png" />
+        <text class="text {{navAction[1]}}">商城</text>
+      </view>
+    </view>
+    <view class="ft_item">
+      <view @tap="goProduct">
+        <image src="/img/{{navImg[2]}}.png" />
+        <text class="text {{navAction[2]}}">产品报价</text>
+      </view>
+    </view>
+  </view>
+</view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class Nav extends wepy.component {
+  data = {
+    userInfo: {},
+    selected: false,
+    guangGaoNode: null,
+    name: '',
+    phone: '',
+    id: '',
+    navImg: ['index1', 'user'],
+    navAction: ['action', 'noAction']
+  };
+  props = {
+    // 静态传值
+    advertisingName: String,
+    // 父向子单向动态传值
+    uuid: {
+      type: String,
+      default: '',
+      twoWay: true
+    }
+  };
+  methods = {
+    goIndex() {
+      this.$parent.$parent.globalData.navImg = ['home1', 'mall', 'product']
+      this.$parent.$parent.globalData.navAction = ['action', 'noAction', 'noAction']
+      this.$emit('childFn', '/pages/index')
+    },
+    goMall() {
+      this.$parent.$parent.globalData.navImg = ['home', 'mall1', 'product']
+      this.$parent.$parent.globalData.navAction = ['noAction', 'action', 'noAction']
+      this.$emit('childFn', '/pages/mall')
+    },
+    goProduct() {
+      this.$parent.$parent.globalData.navImg = ['home', 'mall', 'product1']
+      this.$parent.$parent.globalData.navAction = ['noAction', 'noAction', 'action']
+      this.$emit('childFn', '/pages/product')
+    }
+  };
+  onLoad() {
+    this.navImg = this.$parent.$parent.globalData.navImg
+    this.navAction = this.$parent.$parent.globalData.navAction
+    this.$apply()
+  };
+}
+
+</script>
