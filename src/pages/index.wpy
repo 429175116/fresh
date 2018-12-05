@@ -149,7 +149,7 @@
       <view class="updataNewsList" wx:if="{{nextNewsListData != ''}}" @tap="updataNewsList">查看更多</view>
     </view>
     <!-- 商城海报，外链 -->
-    <image class="mallImg" @tap="goMall" src="{{mallImgUrl}}" style="width:{{mallImgAutoW}}px;height:{{mallImgAutoH}}px" bindload='autoImage' />
+    <image class="mallImg" @tap="goMall" src="{{imgRequestUrl + posterImgUrls}}" style="width:{{mallImgAutoW}}px;height:{{mallImgAutoH}}px" bindload='autoImage' />
     <!-- 新品生鲜 -->
     <view class="artileList">
       <block wx:for="{{ArtileListData}}" key="index" index="index" item="item">
@@ -192,7 +192,7 @@
       openId: '',
       imgUrls: [],
       imgRequestUrl: '',
-      mallImgUrl: 'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+      posterImgUrls: '',
       mallImgAutoW: 0,
       mallImgAutoH: 0,
       indicatorDots: true,
@@ -242,6 +242,8 @@
       this.getArtileList()
       // 用户信息
       this.onGotUserInfo()
+      // 获取海报图片
+      this.getPosterData() 
     }
     // 获取轮播图片
     getSwiperData() {
@@ -251,6 +253,24 @@
         success: data => {
           if (data.data.success) {
             this.imgUrls = data.data.data.rolling_imgs
+            this.$apply()
+          } else {
+            wx.showModal({
+              title: '',
+              content: data.data.data.errmsg
+            })
+          }
+        }
+      })
+    }
+    // 获取海报图片
+    getPosterData() {
+      wx.request({
+        url: `${this.$parent.globalData.requestUrl}/api/poster`,
+        method: 'GET',
+        success: data => {
+          if (data.data.success) {
+            this.posterImgUrls = data.data.poster.img
             this.$apply()
           } else {
             wx.showModal({
