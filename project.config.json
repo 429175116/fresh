@@ -1,15 +1,15 @@
 {
-	"description": "生鲜配送展示",
+	"description": "蔬菜展示",
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": false,
 		"postcss": false,
 		"minified": false,
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"appid": "wxfc7a0ffe1fd98ca2",
-	"projectname": "freshdelivery",
+	"appid": "wxe4efc2da26141286",
+	"projectname": "fresh",
 	"miniprogramRoot": "dist/",
 	"condition": {}
 }
