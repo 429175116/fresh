@@ -1,7 +1,7 @@
 {
 	"description": "蔬菜展示",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": false,
 		"postcss": false,
 		"minified": false,

@@ -1,40 +1,11 @@
 <style lang="less">
-.swiper {
-  height: 600rpx;
-  width: 100%;
-}
-.swiper-image,swiper-item {
-  height: 100%;
-  width: 100%;
-}
-.slide-image{
-  height: 100%;
-  width: 100%;
-}
-.nav{
-  width: 750rpx;
-  height: 200rpx;
-  margin-top: 20rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.navCon{
-  width: 30%;
-  color: #333;
-  font-size: 30rpx;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-}
-.navCon image{
-  width: 100rpx;
-  height: 100rpx;
-}
 .imgList{
   width: 750rpx;
   height: auto;
   margin-bottom: 120rpx;
+}
+image{
+  display:block;
 }
 </style>
 <template>

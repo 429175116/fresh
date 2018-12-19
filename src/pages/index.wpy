@@ -11,7 +11,7 @@
   color: #fff;
 }
 .swiper {
-  height: 600rpx;
+  height: 400rpx;
   width: 100%;
 }
 .swiper-image,swiper-item {
@@ -54,10 +54,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border-top: 1rpx solid #ccc;
 }
 .artileImg{
   width: 350rpx;
-  height: 260rpx;
+  // height: 260rpx;
+  height: auto;
 }
 .artileCon{
   margin-left: 40rpx;
@@ -66,7 +68,7 @@
   font-size: 30rpx;
 }
 
-.artile image{
+.artileImg image{
   width: 350rpx;
   height: 260rpx;
 }
@@ -103,9 +105,24 @@
   margin: auto;
   margin-bottom: 20rpx;
 }
+.listName{
+  width: 750rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  padding: 0 20rpx;
+  margin-top: 20rpx;
+}
+scroll-view{
+  height: auto;
+}
 </style>
 <template>
+
   <view>
+    <scroll-view scroll-y="hidden">
     <import src="../wxParse/wxParse.wxml"/>
     <swiper class="swiper" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
       <block wx:for="{{imgUrls}}" item="item">
@@ -129,7 +146,7 @@
       </view>
     </view> -->
     <!-- 最新活动 -->
-    <!-- <view></view> -->
+    <view class="listName">最新活动</view>
     <view class="activity">
       <block wx:for="{{NewsListData}}" key="index" index="index" item="item">
         <view class="artile" data-id="{{item.id}}" @tap="goNews">
@@ -138,19 +155,19 @@
           </view>
           <view class="artileCon">
             <view class="artileConTitle">{{item.title}}</view>
-            <!-- <view>{{item.content}}</view> -->
             <view>
-              <!-- {{item.content}} -->
               <template is="wxParse" data="{{wxParseData:newsList[index].nodes}}" />
             </view>
           </view>
         </view>
       </block>
+      <!-- <view class="updataNewsList" @tap="updataNewsList">查看更多</view> -->
       <view class="updataNewsList" wx:if="{{nextNewsListData != ''}}" @tap="updataNewsList">查看更多</view>
     </view>
     <!-- 商城海报，外链 -->
     <image class="mallImg" @tap="goMall" src="{{imgRequestUrl + posterImgUrls}}" style="width:{{mallImgAutoW}}px;height:{{mallImgAutoH}}px" bindload='autoImage' />
     <!-- 新品生鲜 -->
+    <view class="listName">新品生鲜</view>
     <view class="artileList">
       <block wx:for="{{ArtileListData}}" key="index" index="index" item="item">
         <view class="artile" data-id="{{item.id}}" @tap="goArtile">
@@ -159,9 +176,7 @@
           </view>
           <view class="artileCon">
             <view class="artileConTitle">{{item.title}}</view>
-            <!-- <view>{{item.content}}</view> -->
             <view>
-              <!-- {{item.content}} -->
               <template is="wxParse" data="{{wxParseData:article[index].nodes}}" />
             </view>
           </view>
@@ -173,7 +188,9 @@
       <button open-type="getUserInfo" wx:if="{{authorizationButton}}" id='getUserInfo' lang="zh_CN" @getuserinfo="onGotUserInfo">{{time}}</button>
     </view>
     <nav :uuid.sync="uuid" @childFn.user="goPage" />
+    </scroll-view>
   </view>
+  
 </template>
 <script>
   import wepy from 'wepy'
@@ -210,7 +227,7 @@
     methods = {
       // 底部导航跳转
       goPage (url, evt) {
-        if (url === "/pages/mall") {
+        if (url === '/pages/mall') {
           this.$navigate(url)
           return
         }
@@ -220,7 +237,7 @@
     }
     // 进入商城
     goMall() {
-      this.$navigate("/pages/mall")
+      this.$navigate('/pages/mall')
     }
     // 显示资讯详情(活动资讯)
     goNews(e) {
@@ -243,7 +260,7 @@
       // 用户信息
       this.onGotUserInfo()
       // 获取海报图片
-      this.getPosterData() 
+      this.getPosterData()
     }
     // 获取轮播图片
     getSwiperData() {
@@ -318,7 +335,8 @@
         success: data => {
           if (data.data.success) {
             data = data.data.news_list
-            this.NewsListData = data.data
+            // this.NewsListData = data.data
+            this.NewsListData = this.NewsListData.concat(data.data)
             for (var i in this.NewsListData) {
               WxParse.wxParse(`newsList[${i}]`, 'html', this.NewsListData[i].content, this, 5)
             }
@@ -374,7 +392,9 @@
         success: data => {
           if (data.data.success) {
             data = data.data.articles
-            this.ArtileListData = data.data
+            // this.ArtileListData = data.data
+            // 数组合并
+            this.ArtileListData = this.ArtileListData.concat(data.data)
             for (var i in this.ArtileListData) {
               WxParse.wxParse(`article[${i}]`, 'html', this.ArtileListData[i].content, this, 5)
             }
