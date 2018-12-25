@@ -131,20 +131,8 @@ scroll-view{
         </swiper-item>
       </block>
     </swiper>
-    <!-- <view class="nav">
-      <view class="navCon">
-        <image src="http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg" />
-        <view>最新活动</view>
-      </view>
-      <view class="navCon">
-        <image src="http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg" />
-        <view>商城海报</view>
-      </view>
-      <view class="navCon">
-        <image src="http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg" />
-        <view>新品生鲜</view>
-      </view>
-    </view> -->
+    <!-- 商城海报，外链 -->
+    <image class="mallImg" @tap="goMall" src="{{imgRequestUrl + posterImgUrls}}" style="width:{{mallImgAutoW}}px;height:{{mallImgAutoH}}px" bindload='autoImage' />
     <!-- 最新活动 -->
     <view class="listName">最新活动</view>
     <view class="activity">
@@ -164,8 +152,6 @@ scroll-view{
       <!-- <view class="updataNewsList" @tap="updataNewsList">查看更多</view> -->
       <view class="updataNewsList" wx:if="{{nextNewsListData != ''}}" @tap="updataNewsList">查看更多</view>
     </view>
-    <!-- 商城海报，外链 -->
-    <image class="mallImg" @tap="goMall" src="{{imgRequestUrl + posterImgUrls}}" style="width:{{mallImgAutoW}}px;height:{{mallImgAutoH}}px" bindload='autoImage' />
     <!-- 新品生鲜 -->
     <view class="listName">新品生鲜</view>
     <view class="artileList">

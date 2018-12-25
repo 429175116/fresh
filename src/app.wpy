@@ -22,6 +22,7 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/ad',
       'pages/index',
       'pages/product',
       'pages/mall',
@@ -38,10 +39,11 @@ export default class extends wepy.app {
 
   globalData = {
     // 线下
-    requestUrl: 'http://shengxian.tesst.com',
+    // requestUrl: 'http://shengxian.tesst.com',
+    // imgRequestUrl: 'http://shengxian.tesst.com/storage/',
     // 线上
-    // requestUrl: 'https://walk.beaconway.cn',
-    imgRequestUrl: 'http://shengxian.tesst.com/storage/',
+    requestUrl: 'https://hengrun.beaconway.cn',
+    imgRequestUrl: 'https://hengrun.beaconway.cn/storage/',
     userInfo: null,
     navImg: ['home1', 'mall', 'product'],
     navAction: ['action', 'noAction', 'noAction']
