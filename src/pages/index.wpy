@@ -49,16 +49,13 @@
 }
 .artile{
   color: #333;
-  width: 750rpx;
-  height: 300rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 710rpx;
+  padding: 20rpx;
+  height: auto;
   border-top: 1rpx solid #ccc;
 }
 .artileImg{
-  width: 350rpx;
-  // height: 260rpx;
+  width: 710rpx;
   height: auto;
 }
 .artileCon{
@@ -69,8 +66,10 @@
 }
 
 .artileImg image{
-  width: 350rpx;
-  height: 260rpx;
+  width: 228rpx;
+  height: 228rpx;
+  margin: 0 5rpx;
+  display: inline-block;
 }
 .artileCon view:nth-child(1){
   width: 100%;
@@ -132,24 +131,27 @@ scroll-view{
       </block>
     </swiper>
     <!-- 商城海报，外链 -->
+    <view class="listName">商城海报</view>
     <image class="mallImg" @tap="goMall" src="{{imgRequestUrl + posterImgUrls}}" style="width:{{mallImgAutoW}}px;height:{{mallImgAutoH}}px" bindload='autoImage' />
     <!-- 最新活动 -->
     <view class="listName">最新活动</view>
     <view class="activity">
       <block wx:for="{{NewsListData}}" key="index" index="index" item="item">
         <view class="artile" data-id="{{item.id}}" @tap="goNews">
-          <view class="artileImg">
-            <image src="{{imgRequestUrl + item.imgs[0].img}}" />
-          </view>
-          <view class="artileCon">
-            <view class="artileConTitle">{{item.title}}</view>
-            <view>
+          <view class="artileConTitle">{{item.title}}</view>
+          <view>
               <template is="wxParse" data="{{wxParseData:newsList[index].nodes}}" />
-            </view>
           </view>
+          <view class="artileImg">
+            <block wx:for="{{item.imgs}}" key="indexImg" index="indexImg" item="item">
+              <image src="{{imgRequestUrl + item.img}}" />
+            </block>
+          </view>
+          <!-- <view class="artileImg">
+            <image src="{{imgRequestUrl + item.imgs[0].img}}" />
+          </view> -->
         </view>
       </block>
-      <!-- <view class="updataNewsList" @tap="updataNewsList">查看更多</view> -->
       <view class="updataNewsList" wx:if="{{nextNewsListData != ''}}" @tap="updataNewsList">查看更多</view>
     </view>
     <!-- 新品生鲜 -->
@@ -157,14 +159,14 @@ scroll-view{
     <view class="artileList">
       <block wx:for="{{ArtileListData}}" key="index" index="index" item="item">
         <view class="artile" data-id="{{item.id}}" @tap="goArtile">
-          <view class="artileImg">
-            <image src="{{imgRequestUrl + item.imgs[0].img}}" />
+          <view class="artileConTitle">{{item.title}}</view>
+          <view>
+              <template is="wxParse" data="{{wxParseData:newsList[index].nodes}}" />
           </view>
-          <view class="artileCon">
-            <view class="artileConTitle">{{item.title}}</view>
-            <view>
-              <template is="wxParse" data="{{wxParseData:article[index].nodes}}" />
-            </view>
+          <view class="artileImg">
+            <block wx:for="{{item.imgs}}" key="indexImg" index="indexImg" item="item">
+              <image src="{{imgRequestUrl + item.img}}" />
+            </block>
           </view>
         </view>
       </block>

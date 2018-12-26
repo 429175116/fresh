@@ -31,6 +31,7 @@
 .navCon image{
   width: 100rpx;
   height: 100rpx;
+  display: block;
 }
 .title{
   display: flex;
@@ -55,13 +56,15 @@
 <template>
   <view>
     <import src="../wxParse/wxParse.wxml"/>
-    <image class="mallImg" src="{{imgRequestUrl + artileData.imgs[0].img}}" style="width:{{autoW}}px;height:{{autoH}}px" bindload='autoImage' />
     <view class="title">
       <view>{{artileData.title}}</view>
     </view>
     <view class="con">
       <template is="wxParse" data="{{wxParseData:article.nodes}}" />
     </view>
+    <block wx:for="{{artileData.imgs}}" key="indexImg" index="indexImg" item="item">
+      <image class="mallImg" src="{{imgRequestUrl + item.img}}" data-index="{{index}}" style="width:{{autoW[index]}}px;height:{{autoH[index]}}px" bindload='autoImage' />
+    </block>
   </view>
 </template>
 <script>
@@ -74,8 +77,8 @@
     data = {
       imgRequestUrl: '',
       artileData: null,
-      autoW: 0,
-      autoH: 0
+      autoW: [],
+      autoH: []
     }
     methods = {
     }
@@ -111,15 +114,15 @@
       // 计算图片比例
       var imgScale = imgW / imgH
       // 声明自适应宽高变量
-      var autoW = ''
-      var autoH = ''
+      var autoW = 0
+      var autoH = 0
       // 获取屏幕宽度，并将图片设置为屏幕等宽
       wx.getSystemInfo({
         success: res => {
           autoW = res.windowWidth
           autoH = autoW / imgScale
-          this.autoW = autoW
-          this.autoH = autoH
+          this.autoW[index] = autoW
+          this.autoH[index] = autoH
           this.$apply()
         }
       })
