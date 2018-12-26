@@ -8,10 +8,17 @@ image{
 }
 .gohome{
   position: fixed;
-  bottom: 200rpx;
-  left: 325rpx;
-  width: 100rpx;
+  bottom: 80rpx;
+  left: 200rpx;
+  width: 342rpx;
   height: 100rpx;
+  line-height: 100rpx;
+  text-align: center;
+  border: 4rpx solid #00c0a4;
+  color: #00c0a4;
+  font-size: 40rpx;
+  font-weight: 600;
+  border-radius: 20rpx;
 }
 </style>
 <template>
@@ -19,7 +26,7 @@ image{
     <view class="imgList">
       <image src="{{imgRequestUrl + img}}" style="width:{{autoW}}px;height:100vh" bindload='autoImage' />
     </view>
-    <image src="/img/shutDown.png" class="gohome" @tap="goHome" />
+    <view class="gohome" @tap="goHome">立即体验</view>
   </view>
 </template>
 <script>

@@ -114,8 +114,17 @@
   padding: 0 20rpx;
   margin-top: 20rpx;
 }
+.artileConTemplate{
+  max-height: 200rpx;
+}
 scroll-view{
   height: auto;
+}
+// 隐藏滚动条
+::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+  color: transparent;
 }
 </style>
 <template>
@@ -139,8 +148,8 @@ scroll-view{
       <block wx:for="{{NewsListData}}" key="index" index="index" item="item">
         <view class="artile" data-id="{{item.id}}" @tap="goNews">
           <view class="artileConTitle">{{item.title}}</view>
-          <view>
-              <template is="wxParse" data="{{wxParseData:newsList[index].nodes}}" />
+          <view class="artileConTemplate">
+            <template is="wxParse" data="{{wxParseData:newsList[index].nodes}}" />
           </view>
           <view class="artileImg">
             <block wx:for="{{item.imgs}}" key="indexImg" index="indexImg" item="item">
@@ -160,8 +169,8 @@ scroll-view{
       <block wx:for="{{ArtileListData}}" key="index" index="index" item="item">
         <view class="artile" data-id="{{item.id}}" @tap="goArtile">
           <view class="artileConTitle">{{item.title}}</view>
-          <view>
-              <template is="wxParse" data="{{wxParseData:newsList[index].nodes}}" />
+          <view class="artileConTemplate">
+            <template is="wxParse" data="{{wxParseData:newsList[index].nodes}}" />
           </view>
           <view class="artileImg">
             <block wx:for="{{item.imgs}}" key="indexImg" index="indexImg" item="item">
