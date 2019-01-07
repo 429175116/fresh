@@ -7,6 +7,14 @@
   justify-content: space-between;
   box-sizing: border-box;
 }
+.dataNullShow{
+  width: 100%;
+  height: 200rpx;
+  line-height: 200rpx;
+  text-align: center;
+  font-size: 40rpx;
+  color: #ccc;
+}
 </style>
 
 <script>

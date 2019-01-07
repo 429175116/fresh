@@ -7,15 +7,48 @@
 image{
   display:block;
 }
+.developerInfo{
+  height: auto;
+  color: #666;
+  font-size: 20rpx;
+  margin-top:100rpx;
+  margin-bottom:120rpx;
+  text-align: center;
+}
+.developerName{
+  font-weight: 700
+}
+.developerInfo view{
+  height: auto;
+  min-height: 40rpx;
+  line-height: 40rpx;
+}
+.developerPhone{
+  display: inline-block;
+}
+.developerPhone view{
+  width: 150rpx;
+  display: inline-block;
+}
 </style>
 <template>
   <view>
-    <view class="imgList">
+    <!-- <view class="imgList">
       <block wx:for="{{imgUrls}}" key="index" index="index" item="item">
         <image src="{{imgRequestUrl + item.img}}" data-index="{{index}}" style="width:{{autoW[index]}}px;height:{{autoH[index]}}px" bindload='autoImage' />
       </block>
+    </view> -->
+    <image class="mallImg" @tap="goMall" src="{{imgRequestUrl + posterImgUrls}}" style="width:{{autoW}}px;height:{{autoH}}px" bindload='autoImage' />
+    <view class="developerInfo">
+      <view class="developerName">联系我们</view>
+      <view>©2019 陕西恒润现代农业有限责任公司 版权所有</view>
+      <view class="developerPhone">
+        联系人：周长华
+        <view @tap="developerPhone" data-phone="15339151435 ">15339151435 </view>
+        <!-- <view @tap="developerPhone" data-phone="029-68567800">029-68567800</view> -->
+      </view>
+      <view @tap="developerAddress">西安市昆明路380西部欣桥农产品交易中心南区副1排1号</view>
     </view>
-    
     <nav :uuid.sync="uuid" @childFn.user="goPage" />
   </view>
 </template>
@@ -24,21 +57,22 @@ image{
   import nav from '../components/nav' // 底部导航
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '产品'
+      navigationBarTitleText: '联系我们'
     }
     components = {
       // 底部导航
       nav: nav
     };
     data = {
-      imgUrls: [],
+      // imgUrls: [],
       imgRequestUrl: '',
-      indicatorDots: true,
-      autoplay: true,
-      interval: 2000,
-      duration: 2000,
-      autoW: [],
-      autoH: []
+      // indicatorDots: true,
+      // autoplay: true,
+      // interval: 2000,
+      // duration: 2000,
+      autoW: 110,
+      autoH: 110,
+      posterImgUrls: ''
     }
     methods = {
       // 底部导航跳转
@@ -49,20 +83,34 @@ image{
         }
         // 销毁当前页{跳转}
         this.$redirect(url)
+      },
+      // 拨打公司电话
+      developerPhone(e) {
+        let phone = e.target.dataset.phone
+        if (phone) {
+          wx.makePhoneCall({
+            phoneNumber: phone,
+            success: function () {
+              console.log('拨打电话成功！')
+            },
+            fail: function () {
+              console.log('拨打电话失败！')
+            }
+          })
+        }
       }
     }
     onLoad() {
       this.imgRequestUrl = this.$parent.globalData.imgRequestUrl
       this.getSwiperData()
     }
-    // 获取轮播图片
     getSwiperData() {
       wx.request({
-        url: `${this.$parent.globalData.requestUrl}/api/imgList`,
+        url: `${this.$parent.globalData.requestUrl}/api/poster`,
         method: 'GET',
         success: data => {
           if (data.data.success) {
-            this.imgUrls = data.data.imgs
+            this.posterImgUrls = data.data.poster.img
             this.$apply()
           } else {
             wx.showModal({
@@ -74,7 +122,6 @@ image{
       })
     }
     autoImage(e) {
-      let index = e.target.dataset.index
       // 获取图片的狂傲
       var imgW = e.detail.width
       var imgH = e.detail.height
@@ -88,11 +135,12 @@ image{
         success: res => {
           autoW = res.windowWidth
           autoH = autoW / imgScale
-          this.autoW[index] = autoW
-          this.autoH[index] = autoH
+          this.autoW = autoW
+          this.autoH = autoH
           this.$apply()
         }
       })
     }
+
   }
 </script>

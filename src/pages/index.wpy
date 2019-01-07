@@ -11,7 +11,7 @@
   color: #fff;
 }
 .swiper {
-  height: 400rpx;
+  height: 381rpx;
   width: 100%;
 }
 .swiper-image,swiper-item {
@@ -85,14 +85,36 @@
   text-overflow: ellipsis;
 }
 .artileConTitle{
+  height: 110rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.artileConTitle view{
+  font-size: 20rpx;
+  color: #999;
+}
+.artileConTitle .artiletitle{
   font-weight: 700;
-  font-size: 35rpx;
+  font-size: 27rpx;
+  color: #333;
+}
+.artileConTitle image{
+  width: 68rpx;
+  height: 68rpx;
+  margin: 20rpx;
+  margin-left: 0rpx;
+  border-radius: 34rpx;
 }
 .activity{
   width: 750rpx;
   height: auto;
-  margin-bottom: 0rpx important;
+  // margin-bottom: 0rpx important;
+  margin-bottom: 120rpx;
 }
+// .activity .artile:nth-last-child(1){
+  
+// }
 .updataNewsList{
   width: 350rpx;
   height: 65rpx;
@@ -104,18 +126,10 @@
   margin: auto;
   margin-bottom: 20rpx;
 }
-.listName{
-  width: 750rpx;
-  height: 80rpx;
-  line-height: 80rpx;
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #333;
-  padding: 0 20rpx;
-  margin-top: 20rpx;
-}
 .artileConTemplate{
-  max-height: 200rpx;
+  max-height: 187rpx;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 scroll-view{
   height: auto;
@@ -126,10 +140,60 @@ scroll-view{
   height: 0;
   color: transparent;
 }
+// 文章分类
+.activityNav{
+  width: 750rpx;
+  height: 86rpx;
+  display: block;
+  background-color: #f5f5f5;
+  white-space:nowrap;
+
+}
+.activityNav .action{
+  color: #ff5543;
+  border-bottom: 4rpx solid #ff5543;
+  height: 82rpx;
+}
+.activityNav view {
+  display: inline-block;
+  font-size: 30rpx;
+  color: #999;
+  margin: 0 25rpx;
+  height: 86rpx;
+  line-height: 86rpx;
+}
+.WxEmojiView{
+  width: 750rpx;
+  word-wrap:break-word;
+  font-size: 23rpx;
+  color: #666;
+  line-height: 2rpx;
+}
+.wxParse-pre{
+  white-space:pre-wrap
+}
+.serviceButton{
+  position: fixed;
+  right: 0;
+  bottom: 300rpx;
+  width: 110rpx;
+  height: 110rpx;
+  z-index: 888;
+  padding: 0rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.serviceButton image{
+  width: 100rpx;
+  height: 100rpx;
+}
 </style>
 <template>
-
   <view>
+    <button class="button serviceButton" open-type="contact" session-from="weapp">
+        <image src="/img/service.png"></image>
+    </button>
     <scroll-view scroll-y="hidden">
     <import src="../wxParse/wxParse.wxml"/>
     <swiper class="swiper" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
@@ -140,16 +204,26 @@ scroll-view{
       </block>
     </swiper>
     <!-- 商城海报，外链 -->
-    <view class="listName">商城海报</view>
-    <image class="mallImg" @tap="goMall" src="{{imgRequestUrl + posterImgUrls}}" style="width:{{mallImgAutoW}}px;height:{{mallImgAutoH}}px" bindload='autoImage' />
+    <!-- <view class="listName">商城海报</view>
+    <image class="mallImg" @tap="goMall" src="{{imgRequestUrl + posterImgUrls}}" style="width:{{mallImgAutoW}}px;height:{{mallImgAutoH}}px" bindload='autoImage' /> -->
     <!-- 最新活动 -->
-    <view class="listName">最新活动</view>
+    <scroll-view  class="activityNav" scroll-x>
+      <block wx:for="{{typeData}}" key="index" index="index" item="item">
+        <view class="{{thisfirstCategoryId == item.id ? 'action':'noaction'}}" data-name="{{item.name}}" data-id="{{item.id}}" @tap="clickActivityCategory">{{item.name}}</view>
+      </block>
+    </scroll-view>
     <view class="activity">
-      <block wx:for="{{NewsListData}}" key="index" index="index" item="item">
+      <block wx:for="{{ArtileListData}}" key="index" index="index" item="item">
         <view class="artile" data-id="{{item.id}}" @tap="goNews">
-          <view class="artileConTitle">{{item.title}}</view>
+          <view class="artileConTitle">
+            <image src="{{imgRequestUrl + item.imgs[0].img}}" />
+            <view>
+              <view class="artiletitle">{{item.title}}</view>
+              <view>作者:{{item.author}}</view>
+            </view>
+          </view>
           <view class="artileConTemplate">
-            <template is="wxParse" data="{{wxParseData:newsList[index].nodes}}" />
+            <template is="wxParse" data="{{wxParseData:article[index].nodes}}" />
           </view>
           <view class="artileImg">
             <block wx:for="{{item.imgs}}" key="indexImg" index="indexImg" item="item">
@@ -161,14 +235,21 @@ scroll-view{
           </view> -->
         </view>
       </block>
+      <view class="dataNullShow" wx:if="{{ArtileListData.length === 0}}" @tap="updataNewsList">暂无文章</view>
       <view class="updataNewsList" wx:if="{{nextNewsListData != ''}}" @tap="updataNewsList">查看更多</view>
     </view>
     <!-- 新品生鲜 -->
-    <view class="listName">新品生鲜</view>
-    <view class="artileList">
+    <!-- <view class="listName">新品生鲜</view> -->
+    <!-- <view class="artileList">
       <block wx:for="{{ArtileListData}}" key="index" index="index" item="item">
         <view class="artile" data-id="{{item.id}}" @tap="goArtile">
-          <view class="artileConTitle">{{item.title}}</view>
+          <view class="artileConTitle">
+            <image src="{{imgRequestUrl + item.imgs[0].img}}" />
+            <view>
+              <view class="artiletitle">{{item.title}}</view>
+              <view>日期日期日期日期</view>
+            </view>
+          </view>
           <view class="artileConTemplate">
             <template is="wxParse" data="{{wxParseData:newsList[index].nodes}}" />
           </view>
@@ -179,7 +260,7 @@ scroll-view{
           </view>
         </view>
       </block>
-    </view>
+    </view> -->
     <!-- 授权按钮部分 -->
     <view>
       <button open-type="getUserInfo" wx:if="{{authorizationButton}}" id='getUserInfo' lang="zh_CN" @getuserinfo="onGotUserInfo">{{time}}</button>
@@ -211,7 +292,7 @@ scroll-view{
       mallImgAutoH: 0,
       indicatorDots: true,
       autoplay: true,
-      interval: 2000,
+      interval: 5000,
       duration: 2000,
       autoW: [],
       autoH: [],
@@ -219,7 +300,9 @@ scroll-view{
       NewsListData: null,
       nextNewsListData: '',
       ArtileListData: null,
-      nextArtileListData: ''
+      nextArtileListData: '',
+      typeData: [],
+      thisfirstCategoryId: ''
     }
     methods = {
       // 底部导航跳转
@@ -230,6 +313,11 @@ scroll-view{
         }
         // 销毁当前页{跳转}
         this.$redirect(url)
+      },
+      clickActivityCategory(e) {
+        this.thisfirstCategoryId = e.currentTarget.dataset.id
+        // 加载文章列表
+        this.getArtileList(this.thisfirstCategoryId)
       }
     }
     // 进入商城
@@ -251,13 +339,14 @@ scroll-view{
       // 获取轮播图资源
       this.getSwiperData()
       // 获取资讯列表数据
-      this.getNewsList()
+      // this.getNewsList()
       // 获取文章列表数据
-      this.getArtileList()
+      // this.getArtileList()
       // 用户信息
       this.onGotUserInfo()
       // 获取海报图片
-      this.getPosterData()
+      this.getTypeData()
+      // getTypeData()
     }
     // 获取轮播图片
     getSwiperData() {
@@ -277,14 +366,17 @@ scroll-view{
         }
       })
     }
-    // 获取海报图片
-    getPosterData() {
+    // 获取分类
+    getTypeData() {
       wx.request({
-        url: `${this.$parent.globalData.requestUrl}/api/poster`,
+        url: `${this.$parent.globalData.requestUrl}/api/categories`,
         method: 'GET',
         success: data => {
           if (data.data.success) {
-            this.posterImgUrls = data.data.poster.img
+            this.typeData = data.data.article_categories
+            // 获取文章列表数据
+            this.thisfirstCategoryId = this.typeData[0].id
+            this.getArtileList(this.thisfirstCategoryId)
             this.$apply()
           } else {
             wx.showModal({
@@ -295,67 +387,12 @@ scroll-view{
         }
       })
     }
-    // 获取资讯列表数据
-    getNewsList() {
-      wx.request({
-        url: `${this.$parent.globalData.requestUrl}/api/newsList`,
-        method: 'GET',
-        success: data => {
-          if (data.data.success) {
-            data = data.data.news_list
-            this.NewsListData = data.data
-            for (var i in this.NewsListData) {
-              WxParse.wxParse(`newsList[${i}]`, 'html', this.NewsListData[i].content, this, 5)
-            }
-            // 获取下一页的请求Id
-            if (data.meta.pagination.links.length !== 0) {
-              this.nextNewsListData = data.meta.pagination.links.next
-            }
-            this.$apply()
-          } else {
-            wx.showModal({
-              title: '',
-              content: data.data.data.errmsg
-            })
-          }
-        }
-      })
-    }
-    // 资讯列表更新
-    updataNewsList() {
-      if (!this.nextNewsListData) {
-        return
-      }
-      wx.request({
-        url: this.nextNewsListData,
-        method: 'GET',
-        success: data => {
-          if (data.data.success) {
-            data = data.data.news_list
-            // this.NewsListData = data.data
-            this.NewsListData = this.NewsListData.concat(data.data)
-            for (var i in this.NewsListData) {
-              WxParse.wxParse(`newsList[${i}]`, 'html', this.NewsListData[i].content, this, 5)
-            }
-            this.nextNewsListData = ''
-            // 获取下一页的请求Id
-            if (data.meta.pagination.links.length !== 0) {
-              this.nextNewsListData = data.meta.pagination.links.next
-            }
-            this.$apply()
-          } else {
-            wx.showModal({
-              title: '',
-              content: data.data.errmsg
-            })
-          }
-        }
-      })
-    }
+
+    
     // 获取文章列表数据
-    getArtileList() {
+    getArtileList(id) {
       wx.request({
-        url: `${this.$parent.globalData.requestUrl}/api/artileList`,
+        url: `${this.$parent.globalData.requestUrl}/api/artileList/${id}`,
         method: 'GET',
         success: data => {
           if (data.data.success) {
@@ -499,5 +536,80 @@ scroll-view{
         }
       })
     }
+    // // 资讯列表更新
+    // updataNewsList() {
+    //   if (!this.nextNewsListData) {
+    //     return
+    //   }
+    //   wx.request({
+    //     url: this.nextNewsListData,
+    //     method: 'GET',
+    //     success: data => {
+    //       if (data.data.success) {
+    //         data = data.data.news_list
+    //         // this.NewsListData = data.data
+    //         this.NewsListData = this.NewsListData.concat(data.data)
+    //         for (var i in this.NewsListData) {
+    //           WxParse.wxParse(`newsList[${i}]`, 'html', this.NewsListData[i].content, this, 5)
+    //         }
+    //         this.nextNewsListData = ''
+    //         // 获取下一页的请求Id
+    //         if (data.meta.pagination.links.length !== 0) {
+    //           this.nextNewsListData = data.meta.pagination.links.next
+    //         }
+    //         this.$apply()
+    //       } else {
+    //         wx.showModal({
+    //           title: '',
+    //           content: data.data.errmsg
+    //         })
+    //       }
+    //     }
+    //   })
+    // }
+        // // 获取海报图片
+    // getPosterData() {
+    //   wx.request({
+    //     url: `${this.$parent.globalData.requestUrl}/api/poster`,
+    //     method: 'GET',
+    //     success: data => {
+    //       if (data.data.success) {
+    //         this.posterImgUrls = data.data.poster.img
+    //         this.$apply()
+    //       } else {
+    //         wx.showModal({
+    //           title: '',
+    //           content: data.data.data.errmsg
+    //         })
+    //       }
+    //     }
+    //   })
+    // }
+    // 获取资讯列表数据
+    // getNewsList() {
+    //   wx.request({
+    //     url: `${this.$parent.globalData.requestUrl}/api/newsList`,
+    //     method: 'GET',
+    //     success: data => {
+    //       if (data.data.success) {
+    //         data = data.data.news_list
+    //         this.NewsListData = data.data
+    //         for (var i in this.NewsListData) {
+    //           WxParse.wxParse(`newsList[${i}]`, 'html', this.NewsListData[i].content, this, 5)
+    //         }
+    //         // 获取下一页的请求Id
+    //         if (data.meta.pagination.links.length !== 0) {
+    //           this.nextNewsListData = data.meta.pagination.links.next
+    //         }
+    //         this.$apply()
+    //       } else {
+    //         wx.showModal({
+    //           title: '',
+    //           content: data.data.data.errmsg
+    //         })
+    //       }
+    //     }
+    //   })
+    // }
   }
 </script>

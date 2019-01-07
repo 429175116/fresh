@@ -52,6 +52,10 @@
   font-weight: 700;
   margin:25rpx;
 }
+.WxEmojiView{
+  color: #666;
+  font-size: 30rpx;
+}
 </style>
 <template>
   <view>
