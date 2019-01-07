@@ -2,8 +2,8 @@
 </style>
 <template>
   <view>
-    <!-- <web-view src="https://hengrun.sdongpo.com/wap"></web-view> -->
-    <web-view src="https://m.zhangwen.cn/"></web-view>
+    <web-view src="https://hengrun.sdongpo.com/wap"></web-view>
+    <!-- <web-view src="https://m.zhangwen.cn/"></web-view> -->
     
     <!-- <nav :uuid.sync="uuid" @childFn.user="goPage" /> -->
   </view>
