@@ -9,7 +9,7 @@
 }
 
 .footer .ft_item {
-  width: 33.33%;
+  width: 25%;
   height: 100%;
   text-align: center;
   float: left;
@@ -70,15 +70,21 @@
       </view>
     </view>
     <view class="ft_item">
-      <view @tap="goMall">
+      <view @tap="goProduct">
         <image src="/img/{{navImg[1]}}.png" />
-        <text class="text {{navAction[1]}}">商城</text>
+        <text class="text {{navAction[1]}}">行情</text>
       </view>
     </view>
     <view class="ft_item">
-      <view @tap="goProduct">
+      <view @tap="goMall">
         <image src="/img/{{navImg[2]}}.png" />
-        <text class="text {{navAction[2]}}">联系我们</text>
+        <text class="text {{navAction[2]}}">商城</text>
+      </view>
+    </view>
+    <view class="ft_item">
+      <view @tap="goContactUs">
+        <image src="/img/{{navImg[3]}}.png" />
+        <text class="text {{navAction[3]}}">联系我们</text>
       </view>
     </view>
   </view>
@@ -109,19 +115,24 @@ export default class Nav extends wepy.component {
   };
   methods = {
     goIndex() {
-      this.$parent.$parent.globalData.navImg = ['home1', 'mall', 'product']
-      this.$parent.$parent.globalData.navAction = ['action', 'noAction', 'noAction']
+      this.$parent.$parent.globalData.navImg = ['home1', 'product', 'mall', 'contactUs']
+      this.$parent.$parent.globalData.navAction = ['action', 'noAction', 'noAction', 'noAction']
       this.$emit('childFn', '/pages/index')
     },
+    goProduct() {
+      this.$parent.$parent.globalData.navImg = ['home', 'product1', 'mall', 'contactUs']
+      this.$parent.$parent.globalData.navAction = ['noAction', 'action', 'noAction', 'noAction']
+      this.$emit('childFn', '/pages/product')
+    },
     goMall() {
-      this.$parent.$parent.globalData.navImg = ['home', 'mall1', 'product']
-      this.$parent.$parent.globalData.navAction = ['noAction', 'action', 'noAction']
+      this.$parent.$parent.globalData.navImg = ['home', 'product', 'mall1', 'contactUs']
+      this.$parent.$parent.globalData.navAction = ['noAction','noAction', 'action', 'noAction']
       this.$emit('childFn', '/pages/mall')
     },
-    goProduct() {
-      this.$parent.$parent.globalData.navImg = ['home', 'mall', 'product1']
-      this.$parent.$parent.globalData.navAction = ['noAction', 'noAction', 'action']
-      this.$emit('childFn', '/pages/product')
+    goContactUs() {
+      this.$parent.$parent.globalData.navImg = ['home', 'product', 'mall', 'contactUs1']
+      this.$parent.$parent.globalData.navAction = ['noAction', 'noAction','noAction', 'action']
+      this.$emit('childFn', '/pages/contactUs')
     }
   };
   onLoad() {

@@ -147,10 +147,12 @@ scroll-view{
 .activityNav{
   width: 750rpx;
   height: 86rpx;
-  display: block;
+  // display: block;
   background-color: #f5f5f5;
   white-space:nowrap;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .activityNav .action{
   color: #ff5543;
@@ -158,10 +160,11 @@ scroll-view{
   height: 82rpx;
 }
 .activityNav view {
-  display: inline-block;
+  // display: inline-block;
   font-size: 30rpx;
   color: #999;
-  margin: 0 25rpx;
+  // margin: 0 25rpx;
+  margin: 0 55rpx;
   height: 86rpx;
   line-height: 86rpx;
 }
@@ -211,27 +214,34 @@ scroll-view{
     <!-- <view class="listName">商城海报</view>
     <image class="mallImg" @tap="goMall" src="{{imgRequestUrl + posterImgUrls}}" style="width:{{mallImgAutoW}}px;height:{{mallImgAutoH}}px" bindload='autoImage' /> -->
     <!-- 最新活动 -->
-    <scroll-view  class="activityNav" scroll-x>
+    <!-- <scroll-view  class="activityNav" scroll-x>
       <block wx:for="{{typeData}}" key="index" index="index" item="item">
         <view class="{{thisfirstCategoryId == item.id ? 'action':'noaction'}}" data-name="{{item.name}}" data-id="{{item.id}}" @tap="clickActivityCategory">{{item.name}}</view>
       </block>
-    </scroll-view>
+    </scroll-view> -->
+    <!-- <scroll-view scroll-x> -->
+      <view  class="activityNav">
+        <block wx:for="{{typeData}}" key="index" index="index" item="item">
+          <view class="{{thisfirstCategoryId == item.id ? 'action':'noaction'}}" data-name="{{item.name}}" data-id="{{item.id}}" @tap="clickActivityCategory">{{item.name}}</view>
+        </block>
+      </view>
+    <!-- </scroll-view> -->
     <view class="activity">
       <block wx:for="{{ArtileListData}}" key="index" index="index" item="item">
-        <view class="artile" data-id="{{item.id}}" @tap="goNews">
-          <view class="artileConTitle">
+        <view class="artile" data-id="{{item.id}}">
+          <view class="artileConTitle" data-id="{{item.id}}" @tap="goArtile">
             <image src="{{imgRequestUrl + item.imgs[0].img}}" />
             <view>
               <view class="artiletitle">{{item.title}}</view> 
               <view>作者:{{item.author}}<text space="ensp">     {{item.updated_at}}</text></view>
             </view>
           </view>
-          <view class="artileConTemplate">
+          <view class="artileConTemplate" data-id="{{item.id}}" @tap="goArtile">
             <template is="wxParse" data="{{wxParseData:article[index].nodes}}" />
           </view>
           <view class="artileImg">
             <block wx:for="{{item.imgs}}" key="indexImg" index="indexImg" item="item">
-              <image src="{{imgRequestUrl + item.img}}" />
+              <image @tap="previewImg" data-url="{{imgRequestUrl + item.img}}" src="{{imgRequestUrl + item.img}}" />
             </block>
           </view>
           <!-- <view class="artileImg">
@@ -322,6 +332,13 @@ scroll-view{
         this.thisfirstCategoryId = e.currentTarget.dataset.id
         // 加载文章列表
         this.getArtileList(this.thisfirstCategoryId)
+      },
+      previewImg(e) {
+        let imgurl = e.currentTarget.dataset.url
+        wx.previewImage({
+          current: [imgurl], // 当前显示图片的http链接   
+          urls: [imgurl] // 需要预览的图片http链接列表   
+        })
       }
     }
     // 进入商城

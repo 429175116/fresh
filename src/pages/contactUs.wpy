@@ -1,0 +1,268 @@
+<style lang="less">
+.imgList{
+  width: 750rpx;
+  height: auto;
+  margin-bottom: 120rpx;
+}
+image{
+  display:block;
+}
+.developerInfo{
+  height: auto;
+  color: #666;
+  font-size: 20rpx;
+  margin-top:100rpx;
+  margin-bottom:120rpx;
+  text-align: center;
+}
+.developerName{
+  font-weight: 700
+}
+.developerInfo view{
+  height: auto;
+  min-height: 40rpx;
+  line-height: 40rpx;
+}
+.developerPhone{
+  display: inline-block;
+}
+.developerPhone view{
+  // width: 150rpx;
+  display: inline-block;
+}
+.contactUs{
+  width: 710rpx;
+  padding: 20rpx;
+}
+.contactUs .item{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20rpx 0;
+  font-size: 30rpx;
+  color: #333;
+}
+.contactUs .item input{
+  margin-left: 20rpx;
+  width: 490rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid #999;
+}
+.contactUs .item view{
+  width: 200rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.updataContactUs{
+  width: 400rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  border-radius: 10rpx;
+  margin: auto;
+  background-color: #00c0a4;
+  color: #fff;
+  font-size: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.contactUsTitle{
+  width: 710rpx;
+  height: 100rpx;
+  font-size: 40rpx;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+<template>
+  <view>
+    <!-- <view class="imgList">
+      <block wx:for="{{imgUrls}}" key="index" index="index" item="item">
+        <image src="{{imgRequestUrl + item.img}}" data-index="{{index}}" style="width:{{autoW[index]}}px;height:{{autoH[index]}}px" bindload='autoImage' />
+      </block>
+    </view> -->
+    <image class="mallImg" @tap="goMall" src="{{imgRequestUrl + posterImgUrls}}" style="width:{{autoW}}px;height:{{autoH}}px" bindload='autoImage' />
+    <view class="contactUs">
+      <view class="contactUsTitle">留下足迹，方便联系</view>
+      <view class="item">
+        <view>称呼：</view>
+        <input type="text" placeholder="请输入姓名" bindinput ="getName" />
+      </view>
+      <view class="item">
+        <view>联系电话：</view>
+        <input type="text" placeholder="请输入电话" bindinput ="getPhone" />
+      </view>
+      <view class="item">
+        <view>备注：</view>
+        <input type="text" placeholder="备注" bindinput ="getRemarks" />
+      </view>
+      <view class="updataContactUs" @tap="runUpdataContactUs">提交信息</view>
+    </view>
+    <view class="developerInfo">
+      <view class="developerName">联系我们</view>
+      <view>©2019 陕西恒润现代农业有限责任公司 版权所有</view>
+      <view class="developerPhone">
+        联系人：周长华
+        <view @tap="developerPhone" data-phone="15339151435 ">15339151435(点击拨打) </view>
+        <!-- <view @tap="developerPhone" data-phone="029-68567800">029-68567800</view> -->
+      </view>
+      <view @tap="developerAddress">西安市昆明路380西部欣桥农产品交易中心南区副1排1号</view>
+    </view>
+    <nav :uuid.sync="uuid" @childFn.user="goPage" />
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import nav from '../components/nav' // 底部导航
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '联系我们'
+    }
+    components = {
+      // 底部导航
+      nav: nav
+    };
+    data = {
+      imgUrls: [],
+      imgRequestUrl: '',
+      indicatorDots: true,
+      autoplay: true,
+      interval: 2000,
+      duration: 2000,
+      autoW: 110,
+      autoH: 110,
+      posterImgUrls: '',
+      name: '',
+      phone: '',
+      remarks: '',
+    }
+    methods = {
+      getName(e) {
+        this.name = e.detail.value
+      },
+      getPhone(e) {
+        this.phone = e.detail.value
+      },
+      getRemarks(e) {
+        this.remarks = e.detail.value
+      },
+      updataContactUs() {
+        this.runUpdataContactUs()
+      },
+      // 底部导航跳转
+      goPage (url, evt) {
+        if (url === "/pages/mall") {
+          this.$navigate(url)
+          return
+        }
+        // 销毁当前页{跳转}
+        this.$redirect(url)
+      },
+      // 拨打公司电话
+      developerPhone(e) {
+        let phone = e.target.dataset.phone
+        if (phone) {
+          wx.makePhoneCall({
+            phoneNumber: phone,
+            success: function () {
+              console.log('拨打电话成功！')
+            },
+            fail: function () {
+              console.log('拨打电话失败！')
+            }
+          })
+        }
+      }
+    }
+    runUpdataContactUs() {
+      if (!this.name) {
+        wx.showModal({
+          title: '',
+          content: '名称不能为空'
+        })
+        return
+      }
+      if (!this.phone) {
+        wx.showModal({
+          title: '',
+          content: '联系电话不能为空'
+        })
+        return
+      }
+      wx.request({
+        url: `${this.$parent.globalData.requestUrl}/api/poster`,
+        method: 'GET',
+        header:{
+          AuthrizeOpenId: this.$parent.globalData.openId
+        },
+        data: {
+          name: this.name,
+          telphone: this.phone,
+          content: this.remarks
+        },
+        success: data => {
+          if (data.data.success) {
+            wx.showModal({
+              title: '',
+              content: '信息提交成功'
+            })
+          } else {
+            wx.showModal({
+              title: '',
+              content: data.data.data.errmsg
+            })
+          }
+        }
+      })
+    }
+    onLoad() {
+      this.imgRequestUrl = this.$parent.globalData.imgRequestUrl
+      this.getSwiperData()
+    }
+    getSwiperData() {
+      wx.request({
+        url: `${this.$parent.globalData.requestUrl}/api/poster`,
+        method: 'GET',
+        success: data => {
+          if (data.data.success) {
+            this.posterImgUrls = data.data.poster.img
+            this.$apply()
+          } else {
+            wx.showModal({
+              title: '',
+              content: data.data.data.errmsg
+            })
+          }
+        }
+      })
+    }
+    autoImage(e) {
+      // 获取图片的狂傲
+      var imgW = e.detail.width
+      var imgH = e.detail.height
+      // 计算图片比例
+      var imgScale = imgW / imgH
+      // 声明自适应宽高变量
+      var autoW = ''
+      var autoH = ''
+      // 获取屏幕宽度，并将图片设置为屏幕等宽
+      wx.getSystemInfo({
+        success: res => {
+          autoW = res.windowWidth
+          autoH = autoW / imgScale
+          this.autoW = autoW
+          this.autoH = autoH
+          this.$apply()
+        }
+      })
+    }
+
+  }
+</script>

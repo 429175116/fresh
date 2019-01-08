@@ -33,6 +33,7 @@ export default class extends wepy.app {
       'pages/ad',
       'pages/index',
       'pages/product',
+      'pages/contactUs',
       'pages/mall',
       'pages/artileDetail',
       'pages/newsDetail'
@@ -53,8 +54,8 @@ export default class extends wepy.app {
     requestUrl: 'https://hengrun.beaconway.cn',
     imgRequestUrl: 'https://hengrun.beaconway.cn/storage/',
     userInfo: null,
-    navImg: ['home1', 'mall', 'product'],
-    navAction: ['action', 'noAction', 'noAction']
+    navImg: ['home1', 'product', 'mall', 'contactUs'],
+    navAction: ['action', 'noAction', 'noAction', 'noAction']
   }
 
   constructor () {
