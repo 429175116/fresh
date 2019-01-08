@@ -93,6 +93,9 @@
 .artileConTitle view{
   font-size: 20rpx;
   color: #999;
+  white-space:nowrap;
+   overflow:hidden;
+   text-overflow:ellipsis;
 }
 .artileConTitle .artiletitle{
   font-weight: 700;
@@ -183,6 +186,7 @@ scroll-view{
   display: flex;
   align-items: center;
   justify-content: center;
+  // border: 1rpx solid red;
 }
 .serviceButton image{
   width: 100rpx;
@@ -218,8 +222,8 @@ scroll-view{
           <view class="artileConTitle">
             <image src="{{imgRequestUrl + item.imgs[0].img}}" />
             <view>
-              <view class="artiletitle">{{item.title}}</view>
-              <view>作者:{{item.author}}</view>
+              <view class="artiletitle">{{item.title}}</view> 
+              <view>作者:{{item.author}}<text space="ensp">     {{item.updated_at}}</text></view>
             </view>
           </view>
           <view class="artileConTemplate">

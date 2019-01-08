@@ -78,7 +78,7 @@
     <view class="ft_item">
       <view @tap="goProduct">
         <image src="/img/{{navImg[2]}}.png" />
-        <text class="text {{navAction[2]}}">产品报价</text>
+        <text class="text {{navAction[2]}}">联系我们</text>
       </view>
     </view>
   </view>
