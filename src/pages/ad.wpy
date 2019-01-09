@@ -77,9 +77,9 @@ image{
       })
     }
     onShow() {
-      setTimeout( e => {
-        this.$navigate('/pages/index')
-      }, 5000)
+      // setTimeout( e => {
+      //   this.$navigate('/pages/index')
+      // }, 5000)
     }
     autoImage(e) {
       let index = e.target.dataset.index
@@ -103,7 +103,7 @@ image{
       })
     }
     goHome() {
-      this.$navigate('/pages/index')
+      this.$redirect('/pages/index')
     }
   }
 </script>

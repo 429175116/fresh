@@ -1,18 +1,32 @@
 <style lang="less">
+// .footer {
+//   width: 750rpx;
+//   height: 130rpx;
+//   position: fixed;
+//   bottom: 0;
+//   background: #fff;
+//   border-top: 1rpx solid #f3f1f1;
+//   z-index: 999;
+// }
 .footer {
-  width: 100%;
+  width: 750rpx;
+  height: 110rpx;
   position: fixed;
+  left: 0;
   bottom: 0;
   background: #fff;
   border-top: 1rpx solid #f3f1f1;
-  z-index: 5;
+  z-index: 999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .footer .ft_item {
   width: 25%;
   height: 100%;
   text-align: center;
-  float: left;
+  // float: left;
 }
 
 .text {
@@ -61,7 +75,7 @@
 父子组件数据完全独立互不相干，但可以通过使用.sync修饰符来达到父组件数据动态绑定到子组件的效果，
 也可以通过设置子组件props的twoWay：true来达到子组件数据绑定到父组件的效果。
 那如果即使用.sync修饰符，同时子组件props的twoWay: true，就可以达到数据的双向绑定。 -->
-  <view>
+<!-- <view> -->
   <view class="footer">
     <view class="ft_item on">
       <view @tap="goIndex">
@@ -88,7 +102,7 @@
       </view>
     </view>
   </view>
-</view>
+<!-- </view> -->
 </template>
 <script>
 import wepy from 'wepy'
