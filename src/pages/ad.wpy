@@ -9,24 +9,58 @@ image{
 .gohome{
   position: fixed;
   bottom: 80rpx;
-  left: 200rpx;
-  width: 342rpx;
-  height: 100rpx;
-  line-height: 100rpx;
+  right: 20rpx;
+  width: 132rpx;
+  height: 80rpx;
+  line-height: 80rpx;
   text-align: center;
-  border: 4rpx solid #00c0a4;
-  color: #00c0a4;
+  border: 2rpx solid #666;
+  color: #fff;
+  background-color: rgba(102, 102, 102, 0.5);
+  font-size: 30rpx;
+  border-radius: 40rpx;
+}
+.gohome{
+  position: fixed;
+  bottom: 80rpx;
+  right: 20rpx;
+  width: 132rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  border: 2rpx solid #666;
+  color: #fff;
+  background-color: rgba(102, 102, 102, 0.5);
   font-size: 40rpx;
-  font-weight: 600;
-  border-radius: 20rpx;
+  border-radius: 40rpx;
+}
+.gohome2{
+  position: fixed;
+  top: 20rpx;
+  right: 20rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background-color: rgba(102, 102, 102, 0.3);
+  border-radius: 40rpx;
+  overflow:hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gohome2 image{
+  width: 80rpx;
+  height: 80rpx;
 }
 </style>
 <template>
   <view>
+    <view class="gohome2" @tap="goHome">
+      <image src="/img/shutDown.png" />
+    </view>
     <view class="imgList">
       <image src="{{imgRequestUrl + img}}" style="width:{{autoW}}px;height:100vh" bindload='autoImage' />
     </view>
-    <view class="gohome" @tap="goHome">立即体验</view>
+    <view class="gohome" @tap="goHome">跳过</view>
   </view>
 </template>
 <script>
