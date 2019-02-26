@@ -54,8 +54,8 @@ export default class extends wepy.app {
     requestUrl: 'https://hengrun.beaconway.cn',
     imgRequestUrl: 'https://hengrun.beaconway.cn/storage/',
     userInfo: null,
-    navImg: ['home1', 'product', 'mall', 'contactUs'],
-    navAction: ['action', 'noAction', 'noAction', 'noAction']
+    navImg: ['home', 'product1', 'mall', 'contactUs'],
+    navAction: ['noAction', 'action', 'noAction', 'noAction']
   }
 
   constructor () {

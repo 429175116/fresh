@@ -138,7 +138,8 @@ image{
       })
     }
     goHome() {
-      this.$redirect('/pages/index')
+      // this.$redirect('/pages/index')
+      this.$redirect('/pages/product')
     }
   }
 </script>
