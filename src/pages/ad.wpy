@@ -58,8 +58,8 @@ image{
       <image src="/img/shutDown.png" />
     </view>
     <view class="imgList">
-      <!-- <image src="{{imgRequestUrl + img}}" style="width:{{autoW}}px;height:100vh" bindload='autoImage' /> -->
-      <image src="https://hengrun.beaconway.cn/storage/images/hrad.jpg" style="width:{{autoW}}px;height:100vh" bindload='autoImage' />
+      <image src="{{imgRequestUrl + img}}" style="width:{{autoW}}px;height:100vh" bindload='autoImage' />
+      <!-- <image src="https://hengrun.beaconway.cn/storage/images/hrad.jpg" style="width:{{autoW}}px;height:100vh" bindload='autoImage' /> -->
     </view>
     <view class="gohome" @tap="goHome">跳过</view>
   </view>
